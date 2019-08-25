@@ -13,18 +13,47 @@ var Spotify = require("node-spotify-api");
 
 var moment = require("moment");
 
-
-// pseudocode-
-
 // LIRI neeeds to take the follwoing commannds
-// * `concert-this`
-
+var input = function(userData,functionData){
+    switch(userData){
+   // * `concert-this`
+        case "concert-this":
+        showConcertInfo(functionData);
+        break;
 // * `spotify-this-song`
-
+        case "spotify-this-song":
+        showSongInfo(functionData);
+        break;
 // * `movie-this`
-
+        case "movie-this":
+        showMovieInfo (functionData);
+        break;
 // * `do-what-it-says`
+        case "do-what-it-says":
+        showSomeInfo(functionData) ;
+        break;
+        default:
+            console.log("Not an option!")
+}
+};
+// pseudocode-
+//1 Bands in town
+var getBands = function (artist){
+    axios.get("https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp").then(function(response){
+        var jsonData = response.data;
+        if(!jsonData.length){
+            console.log("No results found for "+ artist);return;
+        }
 
+        console.log
+    })
+    // * Name of the venue
+
+    //  * Venue location
+
+    //  * Date of the Event (use moment to format this as "MM/DD/YYYY")
+
+};
 
 //output for LIRI-SPOTIFY
 // * Artist(s)
@@ -47,3 +76,4 @@ var moment = require("moment");
 // * Language of the movie.
 // * Plot of the movie.
 // * Actors in the movie.
+
