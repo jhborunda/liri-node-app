@@ -29,17 +29,15 @@ var showConcertInfo = function(artist){
         for (var i = 0; i < jsonData.length; i++) {
             var dat = jsonData[i];
             console.log(
-              dat.venue.city +
+                dat.venue.name +
+                " " + "in " + " " +
+                dat.venue.city +
                 "," +
                 (dat.venue.region || dat.venue.country) +
-                " at " +
-                dat.venue.name +
                 " " +
                 moment(dat.datetime).format("MM/DD/YYYY")
             );
-          }
-
-        
+          }    
     });
 
 };
