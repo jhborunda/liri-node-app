@@ -3,17 +3,123 @@ require("dotenv").config();
 
 var keys = require("./keys.js");
 
-var spotify = new Spotify(keys.spotify);
+// var spotify = new Spotify(keys.spotify);
 
 var fs = require("fs");
 
 var axios = require("axios");
 
-var Spotify = require("node-spotify-api");
+// var Spotify = require("node-spotify-api");
 
 var moment = require("moment");
+// pseudocode-
+//1 Bands in town
+var showConcertInfo = function(artist){
+    
+    axios.get("https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp").then(function(response){
+        var jsonData = response.data;
 
-// LIRI neeeds to take the follwoing commannds
+        if(!jsonData.length){
+            console.log("Nothing found for "+ artist);
+            return;
+        }
+
+        console.log("Upcoming shows for " + artist + ":");
+
+        for (var i = 0; i < jsonData.length; i++) {
+            var dat = jsonData[i];
+            console.log(
+              dat.venue.city +
+                "," +
+                (dat.venue.region || dat.venue.country) +
+                " at " +
+                dat.venue.name +
+                " " +
+                moment(dat.datetime).format("MM/DD/YYYY")
+            );
+          }
+
+        
+    });
+
+};
+
+// //output for LIRI-SPOTIFY
+// var getArtist = function(artist){
+//     return artist.name;
+// }
+
+// var showSongInfo = function(songName){
+//     if (songName===undefined){
+//         songName = "All the Small Things";
+//     }
+
+//     spotify.search(
+//         {
+//             type: "track",
+//             query: songName
+//         },
+//        function(err, data){
+//            if (err){
+//                console.lof("Error occurred: "+ err);
+//                return;
+//            }
+
+//            var songs = data.tracks.items;
+
+//            for (var i=0; i<songs.length; i++){
+//                console.log(i);
+//                console.log("artis: "+ songs[i].artist.map(getArtist));
+//                console.log("song name: " + songs[i].name);
+//             console.log("preview song: " + songs[i].preview_url);
+//              console.log("album: " + songs[i].album.name);
+//             console.log("---------------------------------");
+//            }
+//        } 
+//     );
+// };
+//output for LIRI-MOVIES
+var showMovieInfo = function(movieName){ if (movieName === undefined) {
+    movieName = "Mr Nobody";
+  }
+axios.get("http://www.omdbapi.com/?t=" + movieName + "&y=&plot=full&tomatoes=true&apikey=trilogy").then(function(respsone){
+    var jsonData = respsone.data;
+
+// * Title of the movie.
+console.log("Title: " + jsonData.Title);
+// * Year the movie came out.
+console.log("Year: " + jsonData.Year);
+// * IMDB Rating of the movie.
+console.log("Rated: " + jsonData.Rated);
+// * Rotten Tomatoes Rating of the movie.
+console.log("Rotten Tomatoes Rating: " + jsonData.Ratings[1].Value);
+// * Country where the movie was produced.
+console.log("Country: " + jsonData.Country);
+// * Language of the movie.
+console.log("Language: " + jsonData.Language);
+// * Plot of the movie.
+console.log("Plot: " + jsonData.Plot);
+// * Actors in the movie.
+console.log("Actors: " + jsonData.Actors);
+}
+);
+}
+
+var showSomeInfo = function() {
+    fs.readFile("random.txt", "utf8", function(error, data) {
+      console.log(data);
+  
+      var dataArr = data.split(",");
+  
+      if (dataArr.length === 2) {
+        input(dataArr[0], dataArr[1]);
+      } else if (dataArr.length === 1) {
+        input(dataArr[0]);
+      }
+    });
+  };
+
+  // LIRI neeeds to take the follwoing commannds
 var input = function(userData,functionData){
     switch(userData){
    // * `concert-this`
@@ -21,9 +127,9 @@ var input = function(userData,functionData){
         showConcertInfo(functionData);
         break;
 // * `spotify-this-song`
-        case "spotify-this-song":
-        showSongInfo(functionData);
-        break;
+        // case "spotify-this-song":
+        // showSongInfo(functionData);
+        // break;
 // * `movie-this`
         case "movie-this":
         showMovieInfo (functionData);
@@ -36,44 +142,9 @@ var input = function(userData,functionData){
             console.log("Not an option!")
 }
 };
-// pseudocode-
-//1 Bands in town
-var getBands = function (artist){
-    axios.get("https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp").then(function(response){
-        var jsonData = response.data;
-        if(!jsonData.length){
-            console.log("No results found for "+ artist);return;
-        }
+//needs to take the users inputs from terminal
+var runThis = function(argOne, argTwo) {
+    input(argOne, argTwo);
+  };
 
-        console.log
-    })
-    // * Name of the venue
-
-    //  * Venue location
-
-    //  * Date of the Event (use moment to format this as "MM/DD/YYYY")
-
-};
-
-//output for LIRI-SPOTIFY
-// * Artist(s)
-
-// * The song's name
-
-// * A preview link of the song from Spotify
-
-// * The album that the song is from
-
-// * If no song is provided then your program will default to "The Sign" by Ace of Base.
-
-//output for LIRI-MOVIES
-
-// * Title of the movie.
-// * Year the movie came out.
-// * IMDB Rating of the movie.
-// * Rotten Tomatoes Rating of the movie.
-// * Country where the movie was produced.
-// * Language of the movie.
-// * Plot of the movie.
-// * Actors in the movie.
-
+  runThis(process.argv[2], process.argv.slice(3).join(" "));
