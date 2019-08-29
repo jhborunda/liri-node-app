@@ -3,13 +3,18 @@ require("dotenv").config();
 
 var keys = require("./keys.js");
 
-// var spotify = new Spotify(keys.spotify);
+var Spotify = require("node-spotify-api");
+
+var spotify = new Spotify({
+  id: keys.spotify.id,
+  secret: keys.spotify.secret
+});
+
+console.log(keys);
 
 var fs = require("fs");
 
 var axios = require("axios");
-
-// var Spotify = require("node-spotify-api");
 
 var moment = require("moment");
 // pseudocode-
@@ -43,39 +48,39 @@ var showConcertInfo = function(artist){
 };
 
 // //output for LIRI-SPOTIFY
-// var getArtist = function(artist){
-//     return artist.name;
-// }
+var getArtist = function(artist){
+    return artist.name;
+}
 
-// var showSongInfo = function(songName){
-//     if (songName===undefined){
-//         songName = "All the Small Things";
-//     }
+var showSongInfo = function(songName){
+    if (songName===undefined){
+        songName = "All the Small Things";
+    }
 
-//     spotify.search(
-//         {
-//             type: "track",
-//             query: songName
-//         },
-//        function(err, data){
-//            if (err){
-//                console.lof("Error occurred: "+ err);
-//                return;
-//            }
+    spotify.search(
+        {
+            type: "track",
+            query: songName
+        },
+       function(err, data){
+           if (err){
+               console.log("Error occurred: "+ err);
+               return;
+           }
 
-//            var songs = data.tracks.items;
+           var songs = data.tracks.items;
 
-//            for (var i=0; i<songs.length; i++){
-//                console.log(i);
-//                console.log("artis: "+ songs[i].artist.map(getArtist));
-//                console.log("song name: " + songs[i].name);
-//             console.log("preview song: " + songs[i].preview_url);
-//              console.log("album: " + songs[i].album.name);
-//             console.log("---------------------------------");
-//            }
-//        } 
-//     );
-// };
+          //  for (var i=0; i<songs.length; i++){
+              //  console.log(i);
+               console.log("artist: "+ songs[0].artist);
+               console.log("song name: " + songs[0].name);
+            console.log("preview song: " + songs[0].preview_url);
+             console.log("album: " + songs[0].album.name);
+            console.log("---------------------------------");
+          //  }
+       } 
+    );
+};
 //output for LIRI-MOVIES
 var showMovieInfo = function(movieName){ if (movieName === undefined) {
     movieName = "Mr Nobody";
@@ -125,9 +130,9 @@ var input = function(userData,functionData){
         showConcertInfo(functionData);
         break;
 // * `spotify-this-song`
-        // case "spotify-this-song":
-        // showSongInfo(functionData);
-        // break;
+        case "spotify-this-song":
+        showSongInfo(functionData);
+        break;
 // * `movie-this`
         case "movie-this":
         showMovieInfo (functionData);
